@@ -1,8 +1,10 @@
 #include "sort.h"
 /**
  * _swap - swap two numbers
+ *
  * @a: integer
  * @b: integer
+ * Return 0
  **/
 
 void _swap(int *a, int *b)
@@ -10,27 +12,30 @@ void _swap(int *a, int *b)
 	int tmp;
 
 	tmp = *a;
-	*a = *b;
-	*b = tmp;
+	*b = *a;
+	*a= tmp;
 }
 /**
- * backward_insertion - swap two nodes right left position
- * @array: array
- * @gap: gap
- * @act: actual position in the array
+ * gap_sort - sort array with gaps
+ * @array: array to be sorted
+ * @gap: gap size
+ * @size: size of array
  **/
-void backward_insertion(int *array, int gap, int act)
+void gap_sort(int *array, size_t size, unsigned int gap)
 {
-	int i;
+	size_t j, k;
 
-	for (i = act - gap; i >= 0; i -= gap, act -= gap)
+	for (j = gap; j < size; j++)
 	{
-		if (array[i] > array[act])
-			_swap(&array[i], &array[act]);
-		else
-			break;
+		k = j;
+		while (k >= gap && array[k] < array[k - gap])
+		{
+			swap(array + k, array + k - gap);
+			k -= gap;
+		}
 	}
 }
+
 /**
  * shell_sort - sort an array using shell_sort algorithm
  * @array: array
@@ -38,26 +43,15 @@ void backward_insertion(int *array, int gap, int act)
  **/
 void shell_sort(int *array, size_t size)
 {
-	unsigned int gap = 1, i, j;
+	unsigned int gap = 1;
 
-	if (array == NULL)
-		return;
-	if (size < 2)
-		return;
 	while (gap < size / 3)
 		gap = gap * 3 + 1;
 
-	while (gap > 0)
+	while (gap >= 1)
 	{
-		for (i = 0, j = gap; j < size; i++, j++)
-		{
-			if (array[i] > array[j])
-			{
-				_swap(&array[i], &array[j]);
-				backward_insertion(array, gap, i);
-			}
-		}
+		gap_sort(array, size, gap);
+		gap = (gap - 1) / 3;
 		print_array(array, size);
-		gap /= 3;
 	}
 }
