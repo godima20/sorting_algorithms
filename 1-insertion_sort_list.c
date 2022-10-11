@@ -1,86 +1,55 @@
 #include "sort.h"
 /**
- * swap_backward - swap two nodes right left position
- * @c: list
+ * insertion_sort_list - a function that sorts a doubly linked list
+ * of integers in ascending order using insertion sort algorithm
+ * @list: the list to sort
  *
- **/
-void swap_backward(listint_t *c)
-{
-	listint_t *tmp, *head;
-
-	while (c->prev != NULL)
-	{
-		if (c->n < c->prev->n)
-		{
-			tmp = c->prev->prev;
-			c->prev->next = c->next;
-			c->next = c->prev;
-			c->prev->prev = c;
-			c->prev = tmp;
-			c->next->next->prev = c->next;
-			if (tmp != NULL)
-				tmp->next = c;
-			head = c;
-			while (head->prev != NULL)
-				head = head->prev;
-			print_list(head);
-		}
-		else
-			c = c->prev;
-	}
-}
-/**
- * swap_forward - swap two nodes left right position
- * @c: list
- *
- **/
-void swap_forward(listint_t *c)
-{
-	listint_t *tmp, *head;
-
-	tmp = c->prev;
-
-	if (tmp != NULL)
-	{
-		tmp->next = c->next;
-		c->next->prev = tmp;
-	}
-	else
-		c->next->prev = NULL;
-	c->prev = c->next;
-	if (c->next != NULL)
-	{
-		c->next->next = c;
-		c->next = NULL;
-	}
-	head = c;
-	while (head->prev != NULL)
-		head = head->prev;
-	print_list(head);
-	swap_backward(c->prev);
-}
-/**
- * insertion_sort_list - sort a doubly linked list with insert algorithm
- * @list: list
- *
- **/
+ * Return: None
+ */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *c;
+	listint_t *temp, *current;
+	int elem;
 
-	if ((list == NULL) || (*list == NULL) || ((*list)->next == NULL))
+	if (list == NULL || *list == NULL)
 		return;
-	c = *list;
 
-	while (c->next != NULL)
+	for (temp = (*list)->next; temp != NULL; temp = temp->next)
 	{
-		if (c->n > c->next->n)
+		elem = temp->n;
+		for (current = temp->prev; current != NULL; current = current->prev)
 		{
-			swap_forward(c);
+			if (elem < current->n)
+			{
+				swap_nodes(current, temp);
+
+				if (current->prev == NULL)
+					*list = current;
+				else if (temp->prev == NULL)
+					*list = temp;
+				print_list(*list);
+
+				continue;
+			}
 		}
-		else
-			c = c->next;
 	}
-	while ((*list)->prev != NULL)
-		*list = (*list)->prev;
+}
+/**
+ * swap_nodes - function that swap the nodes of a doubly linked list
+ * @nodeL: the left node
+ * @nodeR: the right node
+ *
+ * Return: None
+ */
+void swap_nodes(listint_t *nodeL, listint_t *nodeR)
+{
+	nodeL->next = nodeR->next;
+	nodeR->next = nodeL;
+	nodeR->prev = nodeL->prev;
+	nodeL->prev = nodeR;
+
+	if (nodeR->prev != NULL)
+		nodeR->prev->next = nodeR;
+	if (nodeL->next != NULL)
+		nodeL->next->prev = nodeL;
 }
