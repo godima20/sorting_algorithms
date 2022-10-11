@@ -1,59 +1,45 @@
 #include "sort.h"
-#include <limits.h>
-#include <stdlib.h>
 
 /**
- * get_max - Find max value in array integers
- *
- * @array: array to find max value of
- * @size: size of the array
- * Return: 0
- */
-int get_max(int *array, size_t size)
-{
-	int max = INT_MIN;
-
-	while (size--)
-		if (array[size] > max)
-			max = array[size];
-
-	return (max);
-}
-
-/**
- * counting_sort - sort an array
- * @array: array to sort
- * @size: size of array to sort
+ * counting_sort - a function that sorts an array of integers
+ * in ascending order using the Counting sort algorithm
+ * @array: array of integers
+ * @size: the size of the array
  */
 void counting_sort(int *array, size_t size)
 {
-	int *temp, *cpy, j, max;
-	size_t i;
+	size_t i, j, k, m, n, max;
+	int *count_arr, *output;
 
-	if (!array || size < 2)
+	if (array == NULL || size < 2)
 		return;
 
-	max = get_max(array, size);
-	temp = calloc(max + 1, sizeof(*temp));
-	if (!temp)
-		return;
-
-	cpy = malloc(sizeof(*cpy) * size);
-	if (!cpy)
+	max = array[0];
+	for (i = 1; i < size; i++)
 	{
-		free(temp);
+		if (array[i] > (int) max)
+			max = array[i];
+	}
+	count_arr = calloc(sizeof(int), max + 1);
+	if (count_arr == NULL)
 		return;
-	}
 
-	for (i = 0; i < size; i++)
+	for (j = 0; j < size; j++)
+		count_arr[array[j]] += 1;
+
+	for (k = 1; k <= max; k++)
+		count_arr[k] += count_arr[k - 1];
+
+	print_array(count_arr, max + 1);
+	output = malloc(sizeof(int) * size);
+
+	for (m = 0; m < size; m++)
 	{
-		temp[array[i]]--;
-		cpy[temp[array[i]]] = array[i];
+		output[count_arr[array[m]] - 1] = array[m];
+		count_arr[array[m]]--;
 	}
-
-	for (i = 0; i < size; i++)
-		array[i] = cpy[i];
-
-	free(temp);
-	free(cpy);
+	for (n = 0; n < size; n++)
+		array[n] = output[n];
+	free(output);
+	free(count_arr);
 }
