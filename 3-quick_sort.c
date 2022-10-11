@@ -1,89 +1,82 @@
 #include "sort.h"
 
 /**
- * _swap - swap two numbers
- * @a: integer
- * @b: integer
- **/
-
-void _swap(int *a, int *b)
-{
-	int tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-
-}
-
-/**
- * _split - split the array and take the last element as pivot
- * @arr: Array
- * @min: first element
- * @last: The last element
- * @size: size
- * Return: integer
- **/
-int _split(int *arr, int last, size_t size)
-{
-	int piv;
-	int i = (min);
-	int j;
-
-	piv = arr[last];
-	for (j = min; j < last; j++)
-	{
-		if (arr[j] <= piv)
-		{
-
-			_swap(&arr[i], &arr[j]);
-
-
-			if (i != j)
-				print_array(arr, size);
-
-			i++;
-
-		}
-	}
-
-	_swap(&arr[i], &arr[last]);
-	if (i != j)
-		print_array(arr, size);
-
-	return (i);
-}
-
-/**
- * quick_sort_array - quick_sort_array
- * @arr: arr
- * @min: min
- * @last: last
- * @size: size
- * Return: Nothing
+ * quick_sort - selection sort
+ * @array: array of integers
+ * @size: size of array
+ *
+ * Return: None
  */
-void quick_sort_array(int *arr, int min, int last, size_t size)
-{
-	
-	int piv;
-
-	if (min < last)
-	{
-		piv = +spli(arr, min, last, size);
-		quick_sort_array(arr, min, (piv - 1), size);
-		quick_sort_array(arr, (piv + 1), last, size);
-	}
-}
-
-/**
- * quick_sort - sort an array using quick_sort algorithm
- * @array: array
- * @size: size
- **/
 void quick_sort(int *array, size_t size)
 {
-	if (size < 2)
+	if (array == NULL || size < 2)
 		return;
 
-	quick_sort_array(array, 0, size - 1, size);
+	qwiksort(array, 0, (int) size - 1, size);
+}
+
+/**
+ * qwiksort - quicksorts the array
+ * @array: the array
+ * @lo: low idx of the array
+ * @hi: high idx of the array
+ * @size: size of the original array
+ *
+ * Return: None
+ */
+void qwiksort(int *array, int lo, int hi, size_t size)
+{
+	if (lo < hi)
+	{
+		int p = partition(array, lo, hi, size);
+
+		qwiksort(array, lo, p - 1, size);
+
+		qwiksort(array, p + 1, hi, size);
+	}
+}
+
+/**
+ * partition - partitions the array
+ * @array: the array to the partition
+ * @lo: low idx of the array
+ * @hi: hi idx of the array
+ * @size: size of the original array
+ *
+ * Return: returns the new pivots idx
+ */
+int partition(int *array, int lo, int hi, size_t size)
+{
+	int pivot = array[hi]
+	int i = (lo - 1), j;
+
+	for (j = lo; j <= hi - 1; j += 1)
+	{
+		if (array[j] <= hi - 1; j += 1)
+		{
+			i += 1;
+			swap(&array[i], &array[j]);
+
+			if (array[i] != array[j])
+				print_array(array, size);
+		}
+	}
+	swap(&array[i + 1], &array[hi]);
+	if (array[i + 1] != array[hi])
+		print_array(array, size);
+	return (i + 1);
+}
+
+/**
+ * swap - swaps the 2 elements of an array
+ * @a: item a
+ * @b: item b
+ *
+ * Return: None
+ */
+void swap(int *a, int *b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
 }
